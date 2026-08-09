@@ -51,15 +51,28 @@
               <label>Volume <input id="setting-volume" type="range" min="0" max="1" step="0.05"></label>
               <label>Impacto de câmera <input id="setting-shake" type="range" min="0" max="1" step="0.05"></label>
               <label>Dificuldade <select id="setting-difficulty"><option value="RECRUIT">Recruta</option><option value="TACTICAL">Tático</option><option value="NIGHTMARE">Pesadelo</option></select></label>
-              <label>Setor <select id="setting-map"><option value="DESERT">Arenito</option><option value="REFINERY">Refinaria</option><option value="NIGHT_LAB">Laboratório noturno</option><option value="CANYON">Saltbreaker Canyon</option><option value="FOUNDRY">Kestrel Foundry</option><option value="BLACKSITE">Blacksite Helix</option><option value="DUST_FORTRESS">Dust Bastion · fortaleza</option><option value="POOL_COMPLEX">Pool Relay · piscinas</option></select></label>
               <label>Gráficos <select id="setting-graphics"><option value="AUTO">Automático</option><option value="LOW">Baixo</option><option value="MEDIUM">Médio</option><option value="HIGH">Alto</option></select></label>
               <label class="toggle-setting"><input id="setting-aim-assist" type="checkbox"> Assistência de mira</label>
               <label class="toggle-setting"><input id="setting-colorblind" type="checkbox"> Alto contraste</label>
             </div>
           </details>
+          <select id="setting-map" class="map-select-storage" tabindex="-1" aria-hidden="true"><option value="DESERT">Arenito</option><option value="REFINERY">Refinaria</option><option value="NIGHT_LAB">Laboratório noturno</option><option value="CANYON">Saltbreaker Canyon</option><option value="FOUNDRY">Kestrel Foundry</option><option value="BLACKSITE">Blacksite Helix</option><option value="DUST_FORTRESS">Dust Bastion</option><option value="POOL_COMPLEX">Pool Relay</option></select>
           <p id="pause-reason" class="system-line">Áudio e captura do mouse serão ativados juntos.</p>
         </div>
-        <aside class="briefing-aside" aria-hidden="true"><div class="map-sigil"><i></i><i></i><i></i><b>A</b><b>B</b></div><span>SETOR 06 / REDE TÁTICA</span></aside>
+        <aside class="map-selector-panel" aria-label="Selecionar mapa">
+          <header><small>TEATRO DE OPERAÇÕES</small><strong>Selecionar setor</strong><span>A recupera · B extrai</span></header>
+          <div class="map-deck">
+            <button class="map-card" data-map="DESERT" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Arenito</b><small>Deserto · rotas abertas</small></em></button>
+            <button class="map-card" data-map="REFINERY" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Refinaria</b><small>Tanques · corredores</small></em></button>
+            <button class="map-card" data-map="NIGHT_LAB" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Night Lab</b><small>Interior · baixa luz</small></em></button>
+            <button class="map-card" data-map="CANYON" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Saltbreaker</b><small>Cânion · longa distância</small></em></button>
+            <button class="map-card" data-map="FOUNDRY" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Kestrel</b><small>Fundição · calor</small></em></button>
+            <button class="map-card" data-map="BLACKSITE" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Blacksite</b><small>Complexo · interferência</small></em></button>
+            <button class="map-card" data-map="DUST_FORTRESS" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Dust Bastion</b><small>Fortaleza · arcos</small></em></button>
+            <button class="map-card" data-map="POOL_COMPLEX" type="button"><i class="map-thumb"><span></span><span></span><span></span><span></span><b>A</b><b>B</b></i><em><b>Pool Relay</b><small>Piscinas · subnível</small></em></button>
+          </div>
+          <footer><span><b>A</b> Recuperar peças</span><span><b>B</b> Extrair carga</span></footer>
+        </aside>
       </section>
 
       <section id="hud" class="hidden" aria-live="polite">
