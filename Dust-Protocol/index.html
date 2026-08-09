@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#151714" />
     <meta name="description" content="Dust Protocol — FPS procedural com drones táticos, progressão e chefes." />
-    <title>Dust Protocol // FPS Lab V3</title>
+    <title>Dust Protocol: Frontline // HTML5 Tactical FPS</title>
     <!-- Biblioteca de testes GamePix. A publicação usa a integração aprovada no painel do parceiro. -->
     <script src="https://gamepix.blob.core.windows.net/gpxlib/dev/gamepix.js"></script>
     <script type="module" crossorigin src="./main.js"></script>
@@ -14,15 +14,32 @@
   <body>
     <main id="game" aria-label="Dust Protocol">
       <div id="vignette"></div><div id="damage-flash"></div>
-      <section id="start-screen" class="modal visible">
+      <section id="loading-screen" class="modal visible" aria-label="Carregando Dust Protocol">
+        <div class="boot-console">
+          <div class="boot-iris" aria-hidden="true"><i></i><i></i><i></i><b>DP</b></div>
+          <div class="eyebrow">REDE TÁTICA // INICIALIZAÇÃO SEGURA</div>
+          <h2>DUST PROTOCOL</h2>
+          <div class="boot-readout"><span id="boot-status">Validando núcleo de combate</span><b id="boot-percent">18%</b></div>
+          <div class="boot-track"><i id="boot-fill"></i></div>
+          <small>FRONTLINE BUILD 4.0 // WEBGL2</small>
+        </div>
+      </section>
+      <section id="start-screen" class="modal">
         <div class="briefing-card">
-          <div class="eyebrow">PROTOCOLO DE CAMPO // DP-06 V3</div>
+          <div class="eyebrow">OPERAÇÃO FRONTLINE // DP-06</div>
           <h1>DUST<br /><span>PROTOCOL</span></h1>
-          <p class="dek">Sobreviva às incursões, complete objetivos e reconfigure o arsenal. As máquinas escutam, compartilham sinais, protegem seus pontos fracos e mudam de tática.</p>
-          <button id="play-button" type="button"><span>Entrar na arena</span><kbd>CLIQUE</kbd></button>
+          <p class="dek">Atravesse cinco incursões, desative a rede de máquinas e destrua o Obelisco. Cada operador altera sua abordagem; cada setor muda as linhas de combate.</p>
+          <div class="operation-strip"><span><small>MISSÃO</small><b>CINCO INCURSÕES</b></span><span><small>AMEAÇA</small><b>MÁQUINAS ADAPTATIVAS</b></span><span><small>SAÍDA</small><b>EXTRAÇÃO APÓS O CHEFE</b></span></div>
+          <div class="operator-deck" aria-label="Selecionar operador">
+            <button class="operator-card" data-operator="VANGUARD" type="button"><i>VG</i><span><b>Vanguard</b><small>Blindagem · reparo</small></span></button>
+            <button class="operator-card" data-operator="RECON" type="button"><i>RC</i><span><b>Recon</b><small>Precisão · EMP</small></span></button>
+            <button class="operator-card" data-operator="ENGINEER" type="button"><i>EN</i><span><b>Engineer</b><small>Controle · minas</small></span></button>
+          </div>
+          <button id="play-button" type="button"><span>Iniciar operação</span><kbd>CLIQUE</kbd></button>
           <div class="controls-grid">
             <div><kbd>WASD</kbd><span>mover</span></div><div><kbd>MOUSE</kbd><span>mirar</span></div>
-            <div><kbd>1—4</kbd><span>armas</span></div><div><kbd>R</kbd><span>recarregar</span></div>
+            <div><kbd>1—6</kbd><span>armas</span></div><div><kbd>R</kbd><span>recarregar</span></div>
+            <div><kbd>G</kbd><span>granada frag</span></div><div><kbd>F</kbd><span>habilidade</span></div>
             <div><kbd>SHIFT</kbd><span>correr / estabilizar</span></div><div><kbd>CTRL / C</kbd><span>agachar / deslizar</span></div>
             <div><kbd>Q / E</kbd><span>inclinar</span></div><div><kbd>ESPAÇO</kbd><span>pular / transpor</span></div>
             <div><kbd>F1 / F3</kbd><span>telemetria</span></div>
@@ -34,7 +51,9 @@
               <label>Volume <input id="setting-volume" type="range" min="0" max="1" step="0.05"></label>
               <label>Impacto de câmera <input id="setting-shake" type="range" min="0" max="1" step="0.05"></label>
               <label>Dificuldade <select id="setting-difficulty"><option value="RECRUIT">Recruta</option><option value="TACTICAL">Tático</option><option value="NIGHTMARE">Pesadelo</option></select></label>
-              <label>Setor <select id="setting-map"><option value="DESERT">Arenito</option><option value="REFINERY">Refinaria</option><option value="NIGHT_LAB">Laboratório noturno</option></select></label>
+              <label>Setor <select id="setting-map"><option value="DESERT">Arenito</option><option value="REFINERY">Refinaria</option><option value="NIGHT_LAB">Laboratório noturno</option><option value="CANYON">Saltbreaker Canyon</option><option value="FOUNDRY">Kestrel Foundry</option><option value="BLACKSITE">Blacksite Helix</option></select></label>
+              <label>Gráficos <select id="setting-graphics"><option value="AUTO">Automático</option><option value="LOW">Baixo</option><option value="MEDIUM">Médio</option><option value="HIGH">Alto</option></select></label>
+              <label class="toggle-setting"><input id="setting-aim-assist" type="checkbox"> Assistência de mira</label>
               <label class="toggle-setting"><input id="setting-colorblind" type="checkbox"> Alto contraste</label>
             </div>
           </details>
@@ -59,7 +78,8 @@
           <div class="sound-meter"><span>SINAL</span><i id="sound-pulse"></i></div>
           <div class="ammo"><small id="weapon-name">AR-6 SENTINEL</small><div><strong id="mag">30</strong><span>/</span><b id="reserve">120</b></div><em id="reload-state"></em></div>
         </div>
-        <div id="weapon-slots"><span class="active">1 <b>AUTO</b></span><span>2 <b>ARC</b></span><span>3 <b>BREACH</b></span><span>4 <b>WIDOW</b></span></div>
+        <div id="weapon-slots"><span class="active">1 <b>AUTO</b></span><span>2 <b>ARC</b></span><span>3 <b>BREACH</b></span><span>4 <b>WIDOW</b></span><span>5 <b>SMG</b></span><span>6 <b>LMG</b></span></div>
+        <div id="tactical-slots"><span><kbd>G</kbd><b id="grenade-state">FRAG ×3</b></span><span><kbd>F</kbd><b id="ability-state">HABILIDADE</b></span><em id="operator-name">VANGUARD</em><em id="condition-label">CONDIÇÃO ESTÁVEL</em></div>
         <div id="status-feed"></div><div id="toast"></div>
         <div id="tutorial"><b id="tutorial-title">ORIENTAÇÃO</b><span id="tutorial-text">WASD move · mouse mira · números trocam armas</span></div>
         <div id="debug-panel" class="hidden">
@@ -78,8 +98,10 @@
           <button id="touch-reload" type="button" aria-label="Recarregar">R</button>
           <button id="touch-crouch" type="button" aria-label="Agachar ou deslizar">SLIDE</button>
           <button id="touch-sprint" type="button" aria-label="Correr">RUN</button>
+          <button id="touch-grenade" type="button" aria-label="Lançar granada">G</button>
+          <button id="touch-ability" type="button" aria-label="Usar habilidade">F</button>
           <div class="touch-weapons" aria-label="Trocar arma">
-            <button data-touch-weapon="0" type="button">1</button><button data-touch-weapon="1" type="button">2</button><button data-touch-weapon="2" type="button">3</button><button data-touch-weapon="3" type="button">4</button>
+            <button data-touch-weapon="0" type="button">1</button><button data-touch-weapon="1" type="button">2</button><button data-touch-weapon="2" type="button">3</button><button data-touch-weapon="3" type="button">4</button><button data-touch-weapon="4" type="button">5</button><button data-touch-weapon="5" type="button">6</button>
           </div>
         </div>
       </section>
@@ -98,6 +120,12 @@
         <div class="eyebrow">SINAL DO OPERADOR PERDIDO</div><h2>FIM DA INCURSÃO</h2>
         <div class="summary-grid"><div><span>onda</span><b id="sum-wave">0</b></div><div><span>tempo</span><b id="sum-time">0:00</b></div><div><span>precisão</span><b id="sum-accuracy">0%</b></div><div><span>acertos</span><b id="sum-hits">0</b></div><div><span>pontos</span><b id="sum-score">0</b></div><div><span>classificação</span><b id="sum-rank">D</b></div></div>
         <button id="restart-button">Reiniciar protocolo</button>
+      </div></section>
+      <section id="victory-screen" class="modal"><div class="summary-card victory-card">
+        <div class="eyebrow">OBELISCO NEUTRALIZADO // EXTRAÇÃO CONFIRMADA</div><h2>MISSÃO CONCLUÍDA</h2>
+        <p>A rede de máquinas perdeu o comando deste setor. Seu resultado foi registrado e uma nova operação está disponível.</p>
+        <div class="summary-grid"><div><span>incursões</span><b>5</b></div><div><span>tempo</span><b id="victory-time">0:00</b></div><div><span>pontos</span><b id="victory-score">0</b></div><div><span>classificação</span><b id="victory-rank">D</b></div></div>
+        <button id="victory-restart-button">Iniciar nova operação</button>
       </div></section>
       <div id="context-message">CONTEXTO GRÁFICO PERDIDO — aguardando restauração…</div>
     </main>
